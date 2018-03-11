@@ -88,4 +88,62 @@ od['ds'] = 2
 od['rt'] = 3
 for key in od:
     print(od[key])
-zip()
+
+# zip()函数：zip() 函数用于将可迭代的对象作为参数，将对象中对应的元素打包成一个个元组，然后返回由这些元组组成的列表。\
+# 如果各个迭代器的元素个数不一致，则返回列表长度与最短的对象相同，利用 * 号操作符，可以将元组解压为列表。
+a = [1, 2, 3]
+b = [4, 5, 6]
+c = zip(a, b)
+for v in c:
+    print(v)
+origin = zip(*c)
+for v in origin:
+    print(v)
+
+# 利用zip()可以反转字典k和v
+dic1 = {"a": 1, "b": 2, "c": 3}
+dic2 = zip(dic1.values(), dic1.keys())
+print('-' * 10, end='\n')
+print(min(dic2),end='\n')
+print('-'*10,end='\n')
+a,*b = zip(dic1.values(), dic1.keys())
+print(a,*b,end='-'*10+'\n')
+
+# 在两个字典中寻找相同点：集合操作
+print('在两个字典中寻找相同点\n')
+dic3 = {'a':2,'b':5,'d':3}
+print(dic1.keys() & dic3.keys())
+print(dic1.keys()-dic3.keys())
+a={key:dic1[key] for key in dic1.keys()-{'a'}}
+print(a)
+
+def dedupe(items):
+    seen = set()
+    for item in items:
+        if item not in seen:
+            yield item
+            seen.add(item)
+a=[1,2,2,3,4,5,6,3,8,5,9]
+print(list(dedupe(a)))
+
+print('-'*10)
+a=[{'x':1,'y':2},{'x':1,'y':3},{'x':1,'y':2},{'x':2,'y':4}]
+key = lambda d:(d['x'],d['y'])
+print(key(a[0]))
+
+
+class strandrepr(object):
+    def __init__(self,id):
+        self.id = id
+    def __repr__(self):
+        print('repr called')
+        return 'user({})'.format(self.id)
+    def __str__(self):
+        print('str called')
+        return 'User({})'.format(self.id)
+
+c= strandrepr(10)
+print(c)
+
+s = ('acd',1,'eof',23,'fd')
+print(','.join(str(x) for x in s))
