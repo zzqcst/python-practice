@@ -1,5 +1,6 @@
 import xgboost as xgb
-from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
+
 dtrain = xgb.DMatrix("../data/agaricus.txt.train")
 dtest = xgb.DMatrix("../data/agaricus.txt.test")
 '''
@@ -9,14 +10,18 @@ eta通过缩减特征的权重使提升计算过程更加保守。缺省值为0.
 silent：取0时表示打印出运行时信息，取1时表示以缄默方式运行，不打印运行时信息。缺省值为0
 objective： 定义学习任务及相应的学习目标，“binary:logistic” 表示二分类的逻辑回归问题，输出为概率。
 '''
-param = {'max_depth':2, 'eta':1, 'silent':0, 'objective':'binary:logistic' }
-
+param = {'max_depth': 2, 'eta': 1, 'silent': 1, 'objective': 'binary:logistic'}
+param['eval_metric'] = 'auc'
 
 # 设置boosting迭代计算次数
-num_round = 2
-bst = xgb.train(param, dtrain, num_round)
-train_preds = bst.predict(dtest)
-train_predictions = [round(value) for value in train_preds]
-y_train = dtrain.get_label() #值为输入数据的第一行
-train_accuracy = accuracy_score(y_train, train_predictions)
-print("Train Accuary: %.2f%%" % (train_accuracy * 100.0))
+num_round = 10
+evallist = [(dtest, 'eval'), (dtrain, 'train')]
+bst = xgb.train(param, dtrain, num_round, evallist)
+preds = bst.predict(dtest)
+print(preds)
+labels = dtest.get_label()
+print('error=%f' % (sum(1 for i in range(len(preds)) if int(preds[i] > 0.5) != labels[i]) / float(len(preds))))
+# ax=xgb.plot_importance(bst)
+# plt.show()
+# ax=xgb.plot_tree(bst, num_trees=2)
+# plt.show()
