@@ -1,3 +1,3 @@
 import matplotlib.pyplot as plt
-plt.plot(range(10),range(10),'--',color='r')
+plt.scatter(1,2,50)
 plt.show()
